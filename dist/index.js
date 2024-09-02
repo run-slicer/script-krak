@@ -1,58 +1,58 @@
 const krakScript = `from pyodide.http import pyfetch
-    response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${"1.0.0"}/dist/krak.zip")
-    await response.unpack_archive()
+response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${"1.0.1"}/dist/krak.zip")
+await response.unpack_archive()
 
-    from Krakatau.java.visitor import DefaultVisitor
-    from Krakatau.java.javaclass import generateAST
-    from Krakatau.ssa import ssaFromVerified
-    from Krakatau.verifier.inference_verifier import verifyBytecode
-    from Krakatau.java.stringescape import escapeString
-    from Krakatau.environment import Environment
-    from Krakatau.classfile import ClassFile
-    from Krakatau.classfileformat.reader import Reader
+from Krakatau.java.visitor import DefaultVisitor
+from Krakatau.java.javaclass import generateAST
+from Krakatau.ssa import ssaFromVerified
+from Krakatau.verifier.inference_verifier import verifyBytecode
+from Krakatau.java.stringescape import escapeString
+from Krakatau.environment import Environment
+from Krakatau.classfile import ClassFile
+from Krakatau.classfileformat.reader import Reader
 
-    def makeGraph(m):
-        v = verifyBytecode(m.code)
-        s = ssaFromVerified(m.code, v, opts=False)
+def makeGraph(m):
+    v = verifyBytecode(m.code)
+    s = ssaFromVerified(m.code, v, opts=False)
 
-        if s.procs:
-            s.inlineSubprocs()
+    if s.procs:
+        s.inlineSubprocs()
 
-        s.condenseBlocks()
-        s.mergeSingleSuccessorBlocks()
-        s.removeUnusedVariables()
+    s.condenseBlocks()
+    s.mergeSingleSuccessorBlocks()
+    s.removeUnusedVariables()
 
-        s.copyPropagation()
-        s.abstractInterpert()
-        s.disconnectConstantVariables()
+    s.copyPropagation()
+    s.abstractInterpert()
+    s.disconnectConstantVariables()
 
-        s.simplifyThrows()
-        s.simplifyCatchIgnored()
-        s.mergeSingleSuccessorBlocks()
-        s.mergeSingleSuccessorBlocks()
-        s.removeUnusedVariables()
+    s.simplifyThrows()
+    s.simplifyCatchIgnored()
+    s.mergeSingleSuccessorBlocks()
+    s.mergeSingleSuccessorBlocks()
+    s.removeUnusedVariables()
 
-        return s
+    return s
 
-    def decompile(data):
-        e = Environment()
+def decompile(data):
+    e = Environment()
 
-        c = ClassFile(Reader(data=bytes(data.to_py())))
-        c.env = e
+    c = ClassFile(Reader(data=bytes(data.to_py())))
+    c.env = e
 
-        e.classes[c.name] = c
+    e.classes[c.name] = c
 
-        c.loadElements()
+    c.loadElements()
 
-        printer = DefaultVisitor()
-        source = printer.visit(generateAST(c, makeGraph, skip_errors=True))
+    printer = DefaultVisitor()
+    source = printer.visit(generateAST(c, makeGraph, skip_errors=True))
 
-        if '/' in c.name:
-            return f'package {escapeString(c.name.replace('/','.').rpartition('.')[0])};\\n\\n{source}'
+    if '/' in c.name:
+        return f'package {escapeString(c.name.replace('/','.').rpartition('.')[0])};\\n\\n{source}'
 
-        return source
+    return source
 
-    decompile`;
+decompile`;
 let decompileFunc = null;
 const krak = {
     id: "krak",
@@ -68,9 +68,9 @@ const krak = {
     },
 };
 var index = {
-    name: "script-krak",
+    name: "krak",
     description: "A script binding for the Krakatau Java decompiler.",
-    version: "1.0.0",
+    version: "1.0.1",
     load(context) {
         context.disasm.add(krak);
     },
