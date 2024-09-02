@@ -1,3 +1,3 @@
-# script-template
+# script-krak
 
-A Rollup+TypeScript template for a project based on the slicer scripting API.
+A slicer script binding for the Krakatau Java decompiler.

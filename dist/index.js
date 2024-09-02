@@ -1,7 +1,5 @@
-import type { Disassembler, Script, ScriptContext } from "@run-slicer/script";
-
 const krakScript = `from pyodide.http import pyfetch
-    response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${__SCRIPT_VERSION__}/dist/krak.zip")
+    response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${"1.0.0"}/dist/krak.zip")
     await response.unpack_archive()
 
     from Krakatau.java.visitor import DefaultVisitor
@@ -55,32 +53,30 @@ const krakScript = `from pyodide.http import pyfetch
         return source
 
     decompile`;
-
-let decompileFunc: ((data: Uint8Array) => string) | null = null;
-
-const krak: Disassembler = {
+let decompileFunc = null;
+const krak = {
     id: "krak",
     label: "Krakatau",
     language: "java",
-    async run(data: Uint8Array): Promise<string> {
+    async run(data) {
         if (!decompileFunc) {
-            decompileFunc = await import("https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs")
+            decompileFunc = await import('https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs')
                 .then(({ loadPyodide }) => loadPyodide())
                 .then((pyodide) => pyodide.runPythonAsync(krakScript));
         }
-
         return decompileFunc(data);
     },
 };
-
-export default {
+var index = {
     name: "script-krak",
     description: "A script binding for the Krakatau Java decompiler.",
-    version: __SCRIPT_VERSION__,
-    load(context: ScriptContext): void | Promise<void> {
+    version: "1.0.0",
+    load(context) {
         context.disasm.add(krak);
     },
-    unload(context: ScriptContext): void | Promise<void> {
+    unload(context) {
         context.disasm.remove(krak.id);
     },
-} satisfies Script;
+};
+
+export { index as default };

@@ -20,4 +20,5 @@ export default {
             __SCRIPT_VERSION__: JSON.stringify(version),
         }),
     ],
+    external: [/^https:\/\/.+$/g],
 } satisfies RollupOptions;
