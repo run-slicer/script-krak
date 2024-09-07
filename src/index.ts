@@ -12,7 +12,7 @@ const loadWorker = async (url: URL): Promise<Worker> => {
 
     const script = await response.text();
 
-    return new Worker(URL.createObjectURL(new Blob([script], { type: "application/javascript" })));
+    return new Worker(URL.createObjectURL(new Blob([script], { type: "application/javascript" })), { type: "module" });
 };
 
 const worker = wrap<KrakWorker>(await loadWorker(new URL("./worker.js", import.meta.url)));

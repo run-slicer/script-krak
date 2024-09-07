@@ -343,7 +343,7 @@ const loadWorker = async (url) => {
         throw new Error(`Failed to fetch worker`);
     }
     const script = await response.text();
-    return new Worker(URL.createObjectURL(new Blob([script], { type: "application/javascript" })));
+    return new Worker(URL.createObjectURL(new Blob([script], { type: "application/javascript" })), { type: "module" });
 };
 const worker = wrap(await loadWorker(new URL("./worker.js", import.meta.url)));
 const krak = {
