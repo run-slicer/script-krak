@@ -66,7 +66,7 @@ expose({
     async run(data: Uint8Array): Promise<string> {
         if (!decompileFunc) {
             decompileFunc = await import("https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs")
-                .then(({ loadPyodide }) => loadPyodide())
+                .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/" }))
                 .then(({ runPythonAsync }) => runPythonAsync(krakScript));
         }
 

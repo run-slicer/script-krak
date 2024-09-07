@@ -395,7 +395,7 @@ expose({
     async run(data) {
         if (!decompileFunc) {
             decompileFunc = await import('https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs')
-                .then(({ loadPyodide }) => loadPyodide())
+                .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/" }))
                 .then(({ runPythonAsync }) => runPythonAsync(krakScript));
         }
         return decompileFunc(data);
