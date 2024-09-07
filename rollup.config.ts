@@ -6,19 +6,29 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 
 const { version } = JSON.parse(await readFile("./package.json", "utf8"));
 
-export default {
-    input: "src/index.ts",
-    output: {
-        dir: "dist",
-        format: "esm",
+export default [
+    {
+        input: "src/index.ts",
+        output: {
+            dir: "dist",
+            format: "esm",
+        },
+        plugins: [
+            nodeResolve(),
+            typescript(),
+            replace({
+                preventAssignment: true,
+                __SCRIPT_VERSION__: JSON.stringify(version),
+            }),
+        ],
     },
-    plugins: [
-        nodeResolve(),
-        typescript(),
-        replace({
-            preventAssignment: true,
-            __SCRIPT_VERSION__: JSON.stringify(version),
-        }),
-    ],
-    external: [/^https:\/\/.+$/g],
-} satisfies RollupOptions;
+    {
+        input: "src/worker.ts",
+        output: {
+            dir: "dist",
+            format: "esm",
+        },
+        plugins: [nodeResolve(), typescript()],
+        external: [/^https:\/\/.+$/g],
+    },
+] satisfies RollupOptions[];
