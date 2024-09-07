@@ -1,8 +1,21 @@
 import type { Disassembler, Script, ScriptContext } from "@run-slicer/script";
 import { wrap } from "comlink";
-import type { Worker } from "./worker";
+import type { Worker as KrakWorker } from "./worker";
 
-const worker = wrap<Worker>(new Worker(new URL("./worker.js", import.meta.url)));
+// bypass cross-origin limitation
+const loadWorker = async (url: URL): Promise<Worker> => {
+    const response = await fetch(url);
+    if (!response.ok) {
+        console.error(response);
+        throw new Error(`Failed to fetch worker`);
+    }
+
+    const script = await response.text();
+
+    return new Worker(URL.createObjectURL(new Blob([script], { type: "application/javascript" })));
+};
+
+const worker = wrap<KrakWorker>(await loadWorker(new URL("./worker.js", import.meta.url)));
 
 const krak: Disassembler = {
     id: "krak",

@@ -335,7 +335,17 @@ function generateUUID() {
         .join("-");
 }
 
-const worker = wrap(new Worker(new URL("./worker.js", import.meta.url)));
+// bypass cross-origin limitation
+const loadWorker = async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+        console.error(response);
+        throw new Error(`Failed to fetch worker`);
+    }
+    const script = await response.text();
+    return new Worker(URL.createObjectURL(new Blob([script], { type: "application/javascript" })));
+};
+const worker = wrap(await loadWorker(new URL("./worker.js", import.meta.url)));
 const krak = {
     id: "krak",
     label: "Krakatau",
