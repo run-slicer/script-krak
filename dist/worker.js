@@ -336,7 +336,7 @@ function generateUUID() {
 }
 
 const krakScript = `from pyodide.http import pyfetch
-response = await pyfetch("./krak.zip")
+response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${__SCRIPT_VERSION__}/dist/krak.zip")
 await response.unpack_archive()
 
 from Krakatau.java.visitor import DefaultVisitor
