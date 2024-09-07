@@ -28,7 +28,14 @@ export default [
             dir: "dist",
             format: "esm",
         },
-        plugins: [nodeResolve(), typescript()],
+        plugins: [
+            nodeResolve(),
+            typescript(),
+            replace({
+                preventAssignment: true,
+                __SCRIPT_VERSION__: JSON.stringify(version),
+            }),
+        ],
         external: [/^https:\/\/.+$/g],
     },
 ] satisfies RollupOptions[];

@@ -355,7 +355,7 @@ const krak = {
 var index = {
     name: "krak",
     description: "A script binding for the Krakatau Java decompiler.",
-    version: "1.1.0",
+    version: "1.1.1",
     load(context) {
         context.disasm.add(krak);
     },
