@@ -335,7 +335,7 @@ function generateUUID() {
         .join("-");
 }
 
-const worker = wrap(new Worker(new URL("./worker.js", import.meta.url), { type: "module" }));
+const worker = wrap(new Worker(new URL("./worker.js", import.meta.url)));
 const krak = {
     id: "krak",
     label: "Krakatau",
@@ -345,7 +345,7 @@ const krak = {
 var index = {
     name: "krak",
     description: "A script binding for the Krakatau Java decompiler.",
-    version: "1.0.1",
+    version: "1.1.0",
     load(context) {
         context.disasm.add(krak);
     },
