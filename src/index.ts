@@ -21,17 +21,25 @@ const krak: Disassembler = {
     id: "krak",
     label: "Krakatau",
     language: "java",
-    run: worker.run,
+    run: worker.decompile,
+};
+
+const krakAsm: Disassembler = {
+    id: "krak-asm",
+    label: "Krakatau (ASM)",
+    run: worker.disassemble,
 };
 
 export default {
     name: "krak",
-    description: "A script binding for the Krakatau Java decompiler.",
+    description: "A script binding for the Krakatau Java decompiler and disassembler.",
     version: __SCRIPT_VERSION__,
     load(context: ScriptContext): void | Promise<void> {
         context.disasm.add(krak);
+        context.disasm.add(krakAsm);
     },
     unload(context: ScriptContext): void | Promise<void> {
         context.disasm.remove(krak.id);
+        context.disasm.remove(krakAsm.id);
     },
 } satisfies Script;

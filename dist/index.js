@@ -350,17 +350,24 @@ const krak = {
     id: "krak",
     label: "Krakatau",
     language: "java",
-    run: worker.run,
+    run: worker.decompile,
+};
+const krakAsm = {
+    id: "krak-asm",
+    label: "Krakatau (ASM)",
+    run: worker.disassemble,
 };
 var index = {
     name: "krak",
-    description: "A script binding for the Krakatau Java decompiler.",
-    version: "1.1.1",
+    description: "A script binding for the Krakatau Java decompiler and disassembler.",
+    version: "1.2.0",
     load(context) {
         context.disasm.add(krak);
+        context.disasm.add(krakAsm);
     },
     unload(context) {
         context.disasm.remove(krak.id);
+        context.disasm.remove(krakAsm.id);
     },
 };
 

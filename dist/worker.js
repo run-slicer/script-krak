@@ -336,8 +336,10 @@ function generateUUID() {
 }
 
 const krakScript = `from pyodide.http import pyfetch
-response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${"1.1.1"}/dist/krak.zip")
+response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${"1.2.0"}/dist/krak.zip")
 await response.unpack_archive()
+
+from io import StringIO
 
 from Krakatau.java.visitor import DefaultVisitor
 from Krakatau.java.javaclass import generateAST
@@ -347,6 +349,8 @@ from Krakatau.java.stringescape import escapeString
 from Krakatau.environment import Environment
 from Krakatau.classfile import ClassFile
 from Krakatau.classfileformat.reader import Reader
+from Krakatau.classfileformat.classdata import ClassData
+from Krakatau.assembler.disassembly import Disassembler
 
 def makeGraph(m):
     v = verifyBytecode(m.code)
@@ -389,15 +393,35 @@ def decompile(data):
 
     return source
 
-decompile`;
+def disassemble(data):
+    c = ClassData(Reader(data=bytes(data.to_py())))
+
+    output = StringIO()
+    Disassembler(c, output.write, roundtrip=False).disassemble()
+
+    return output.getvalue()`;
 let decompileFunc = null;
+let disassembleFunc = null;
+const loadFuncs = async () => {
+    await import('https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs')
+        .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/" }))
+        .then(async ({ runPythonAsync, globals }) => {
+        await runPythonAsync(krakScript);
+        decompileFunc = globals.get("decompile");
+        disassembleFunc = globals.get("disassemble");
+    });
+};
 expose({
-    async run(data) {
+    async decompile(data) {
         if (!decompileFunc) {
-            decompileFunc = await import('https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs')
-                .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/" }))
-                .then(({ runPythonAsync }) => runPythonAsync(krakScript));
+            await loadFuncs();
         }
         return decompileFunc(data);
+    },
+    async disassemble(data) {
+        if (!disassembleFunc) {
+            await loadFuncs();
+        }
+        return disassembleFunc(data);
     },
 });

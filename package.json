@@ -1,10 +1,10 @@
 {
     "name": "script-krak",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "type": "module",
     "author": "run-slicer",
     "license": "GPL-3.0-only",
-    "description": "A slicer script binding for the Krakatau Java decompiler.",
+    "description": "A slicer script binding for the Krakatau Java decompiler and disassembler.",
     "scripts": {
         "prepare": "mkdir -p dist; cd Krakatau; find Krakatau LICENSE.TXT -name \"*.py\" -o -name \"LICENSE.TXT\" | zip -FS -@ ../dist/krak.zip",
         "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
