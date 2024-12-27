@@ -21,13 +21,23 @@ const krak: Disassembler = {
     id: "krak",
     label: "Krakatau",
     language: "java",
-    run: worker.decompile,
+    async class(name, source) {
+        const data = await source(name);
+        if (!data) return "";
+
+        return worker.decompile(data);
+    },
 };
 
 const krakAsm: Disassembler = {
     id: "krak-asm",
     label: "Krakatau (ASM)",
-    run: worker.disassemble,
+    async class(name, source) {
+        const data = await source(name);
+        if (!data) return "";
+
+        return worker.disassemble(data);
+    },
 };
 
 export default {
