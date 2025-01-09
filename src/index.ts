@@ -41,7 +41,7 @@ const krakAsm: Disassembler = {
 };
 
 export default {
-    name: "krak",
+    name: "Krakatau",
     description: "A script binding for the Krakatau Java decompiler and disassembler.",
     version: __SCRIPT_VERSION__,
     load(context: ScriptContext): void | Promise<void> {
