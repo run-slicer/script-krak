@@ -348,7 +348,7 @@ function generateUUID() {
 }
 
 const krakScript = `from pyodide.http import pyfetch
-response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${"1.4.0"}/dist/krak.zip")
+response = await pyfetch("https://cdn.jsdelivr.net/gh/run-slicer/script-krak@${"1.5.0"}/dist/krak.zip")
 await response.unpack_archive()
 
 from io import StringIO
@@ -415,8 +415,8 @@ def disassemble(data):
 let decompileFunc = null;
 let disassembleFunc = null;
 const loadFuncs = async () => {
-    await import('https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs')
-        .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/" }))
+    await import('https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs')
+        .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/" }))
         .then(async ({ runPythonAsync, globals }) => {
         await runPythonAsync(krakScript);
         decompileFunc = globals.get("decompile");

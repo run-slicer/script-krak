@@ -382,7 +382,7 @@ const krakAsm = {
 var index = {
     name: "Krakatau",
     description: "A script binding for the Krakatau Java decompiler and disassembler.",
-    version: "1.4.0",
+    version: "1.5.0",
     load(context) {
         context.disasm.add(krak);
         context.disasm.add(krakAsm);

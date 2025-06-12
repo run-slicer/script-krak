@@ -77,8 +77,8 @@ let decompileFunc: KrakFunc | null = null;
 let disassembleFunc: KrakFunc | null = null;
 
 const loadFuncs = async () => {
-    await import("https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.mjs")
-        .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.2/full/" }))
+    await import("https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs")
+        .then(({ loadPyodide }) => loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/" }))
         .then(async ({ runPythonAsync, globals }) => {
             await runPythonAsync(krakScript);
 
